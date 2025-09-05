@@ -1,0 +1,33 @@
+name: ci
+on:
+  - push
+  - pull_request
+  
+# Environment
+env:
+  CI: true
+  PYTHON_VERSION: 3.12
+
+# Jobs to run
+jobs:
+     
+  # Build and deploy documentation site
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Set up Python
+        run: uv python install ${{ env.PYTHON_VERSION }}
+
+      # pip
+      - run: |
+          uv sync
+          
+      # deploy
+      - run: |
+          uv run mkdocs gh-deploy --force
