@@ -1,3 +1,0 @@
-# ANN-DL-Pedro
-
-WIP
